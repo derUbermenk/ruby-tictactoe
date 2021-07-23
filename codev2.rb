@@ -6,16 +6,13 @@ class Game
   attr_accessor :board
 
   def initialize
-    @board = Board.new 
+    @board = Board.new
     @p1 = Player.new(piece: 'X', board: board)
     @p2 = Player.new(piece: 'O', board: board)
   end
 
   def playGame
   end
-
-
-
 end
 
 # a class for where pieces are to be played
