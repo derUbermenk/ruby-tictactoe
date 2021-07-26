@@ -1,0 +1,18 @@
+
+[1mFrom:[0m /home/chester/Documents/the-odin-project/ruby-tictactoe/tic_tac_toe_v2.rb:25 Game#play:
+
+    [1;34m15[0m: [32mdef[0m [1;34mplay[0m
+    [1;34m16[0m:   [32muntil[0m stop_conditions_met?
+    [1;34m17[0m:     [1;36mself[0m.board.show_board
+    [1;34m18[0m:     [[1;36mself[0m.p1, [1;36mself[0m.p2].each { |player|
+    [1;34m19[0m:       [1;34m# put directions here[0m
+    [1;34m20[0m:       puts [31m[1;31m"[0m[31mplayer move, press z to quit[1;31m"[0m[31m[0m
+    [1;34m21[0m:       game_flow(player.move, player.piece)
+    [1;34m22[0m: 
+    [1;34m23[0m:       binding.pry
+    [1;34m24[0m:       
+ => [1;34m25[0m:       [1;36mself[0m.winner = player.winner? [1;34m# will return change winner value if so[0m
+    [1;34m26[0m:     }
+    [1;34m27[0m:   [32mend[0m
+    [1;34m28[0m: [32mend[0m
+
