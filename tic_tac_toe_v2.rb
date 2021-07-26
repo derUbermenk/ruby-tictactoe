@@ -15,7 +15,7 @@ class Game
 
   def play
     self.board.show_board
-    until stop_conditions_met?
+    until stop_conditions_met? do
       [self.p1, self.p2].each { |player|
         puts "\n #{player.name} move \n enter z to quit \n enter piece position to put piece \n"
         game_flow(player.move, player.piece)
@@ -31,7 +31,8 @@ class Game
   #
   # @param player_piece [String, Symbol] the piece the player puts on board
   # @param player_input [String, Int] can either be z (to quit) or any ... 
-  # ... from 0 to 8 to place the piece
+  # ... from 0 to 8 to place the piece. This is generally intended to be the ... 
+  # ... the position for which the piece is to be placed
   def game_flow(player_input, player_piece)
     case player_input
     when 'z'
@@ -109,7 +110,7 @@ class Player
   # @param argument [String]
   # @return [TrueClass, FalseClass]
   def numeral?(argument)
-    argument.to_i.to_s
+    argument.to_i.to_s == argument
   end
 end
 
