@@ -14,11 +14,11 @@ class Game
   end
 
   def play
-    self.board.show_board
+    self.board.show
     until stop_conditions_met? do
       [self.p1, self.p2].each { |player|
         puts "\n #{player.name} move \n enter z to quit \n enter piece position to put piece \n"
-        game_flow(player.move, player.piece)
+        game_flow(player)
         self.winner = player.winner?
       }
     end
@@ -33,15 +33,21 @@ class Game
   # @param player_input [String, Int] can either be z (to quit) or any ... 
   # ... from 0 to 8 to place the piece. This is generally intended to be the ... 
   # ... the position for which the piece is to be placed
-  def game_flow(player_input, player_piece)
+  def game_flow(player)
+    player_input = player.move
     case player_input
     when 'z'
       self.quit = true
     when 0..8
-      self.board.update_board(player_input, player_piece)
+      if self.board.position_filled(player_input)
+        puts " position filled \n choose another position "
+        game_flow(player)
+      else
+        self.board.update(player_input, player.piece)
+      end
     else
       puts 'invalid input'
-      game_flow(player_piece, player_input)
+      game_flow(player_input, player.piece)
     end
   end
 
@@ -50,7 +56,7 @@ class Game
   # @return [TrueClass, FalseClass]
   def stop_conditions_met?
     if has_winner
-      puts self.winner
+      puts "\n #{self.winner} is winner "
     elsif board_full 
       puts 'board is full'
     elsif self.quit
@@ -65,7 +71,7 @@ class Game
   end
 
   def board_full 
-    self.board.board_full
+    self.board.full
   end
 end
 
@@ -131,12 +137,13 @@ class Board
   #
   # @param index [Integer] the key of the position to be changed
   # @param value [String, Integer, Symbol] the value to be substituted
-  def update_board(index, value)
+  def update(index, value)
+    #update only when value at index is integer
     self.positions[index] = value
-    self.show_board
+    self.show
   end
 
-  def show_board
+  def show
     vals = self.positions.values
     row_vals = [vals[0..2], vals[3..5], vals[6..8]]
     rows = row_vals.map{ |row| row.join(' | ')}
@@ -144,8 +151,8 @@ class Board
   end
 
   # board is full unless there is a remaining position with an integer
-  def board_full
-    self.positions.any? Integer
+  def full
+    !self.positions.values.any? Integer
   end
 
   # checks if any line in the board is a line made up of x, this is a win with x
@@ -168,11 +175,20 @@ class Board
     check1 || check2
   end
 
+  # Checks if the value at the given index is filled; value is ... 
+  # ... not an integer
+  # 
+  # @param position_index [Integer]  
+  # @return [TrueClass, FalseClass]
+  def position_filled(position_index)
+    !self.positions[position_index].is_a? Integer
+  end
+
   private
 
   # Helper for win? 
   # Checks if any of the lines [3 points] represented by the midpoints
-  # ... has the given element x as the value of all positions. This 
+  # ... has the given element x as the value of all positions. This
   # ... function is limited to 3 point lines i.e X X X or 1 2 3
   #
   # @param midpoints [Array] array indexes representing the midpoint of a row
@@ -180,10 +196,31 @@ class Board
   # @param x [String] the value that one line should contain to be defined as straight
   def has_straight_line(midpoints, spacing, x)
     pos = self.positions
-    midpoints.map{|midpoint| [pos[midpoint-=spacing], pos[midpoint], pos[midpoint+=spacing]].all? x}.include? true 
+    midpoints.map{|midpoint| [pos[midpoint -= spacing], pos[midpoint], pos[midpoint += spacing]].all? x }.include? true
   end
 end
 
 # main
-game = Game.new
-game.play
+# game = Game.new
+# game.play
+
+def test 
+
+  board = Board.new
+
+  pos = board.positions
+
+  pos.keys.each { |key| pos[key] = 'a'}
+
+  board_full = board.board_full
+
+  binding.pry
+end
+
+def test2
+  game = Game.new
+  binding.pry
+  game.play
+end
+
+test2
