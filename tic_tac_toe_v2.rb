@@ -42,10 +42,11 @@ class Game
       self.quit = true
     when 0..8
       if self.board.position_filled(player_input)
-        puts " position filled \n choose another position "
+        puts "\n position filled \n choose another position "
         game_flow(player)
       else
         self.board.update(player_input, player.piece)
+        self.winner = player.winner?
       end
     else
       puts 'invalid input'
@@ -80,7 +81,7 @@ class Game
   #
   # @param player[Player]
   def print_player_prompt(player)
-    puts "\n #{player.name} move \n enter z to quit \n enter piece position to put piece \n"
+    puts "\n #{player.name} move \n enter z to quit \n enter piece position to put piece \n "
   end
 end
 
@@ -156,7 +157,7 @@ class Board
     vals = self.positions.values
     row_vals = [vals[0..2], vals[3..5], vals[6..8]]
     rows = row_vals.map{ |row| row.join(' | ')}
-    puts " #{rows[0]} \n #{rows[1]} \n #{rows[2]} "
+    puts " \n #{rows[0]} \n #{rows[1]} \n #{rows[2]} \n "
   end
 
   # board is full unless there is a remaining position with an integer
@@ -170,7 +171,7 @@ class Board
   # @return [TrueClass]
   def win?(with_x)
     row_mp, column_mp = [1, 4, 7], [3, 4, 5]
-    diagonal1_mp, diagonal2_mp = [2, 4, 6], [0, 4, 8]
+    diagonal_mp = [4]
 
     # still needs fixing
     # make a clearer representation
@@ -178,8 +179,8 @@ class Board
     # checks are either true or falls depending on wether the lines of mps are not straight
     # win? returns true when at least one check returns true
 
-    check1 = has_straight_line(row_mp, 3, with_x) || has_straight_line(column_mp, 1, with_x)    
-    check2 = has_straight_line(diagonal1_mp, 2, with_x) || has_straight_line(diagonal2_mp, 4, with_x)
+    check1 = has_straight_line(row_mp, 1, with_x) || has_straight_line(column_mp, 3, with_x)    
+    check2 = has_straight_line(diagonal_mp, 2, with_x) || has_straight_line(diagonal_mp, 4, with_x)
 
     check1 || check2
   end
@@ -205,7 +206,7 @@ class Board
   # @param x [String] the value that one line should contain to be defined as straight
   def has_straight_line(midpoints, spacing, x)
     pos = self.positions
-    midpoints.map{|midpoint| [pos[midpoint -= spacing], pos[midpoint], pos[midpoint += spacing]].all? x }.include? true
+    midpoints.map{|midpoint| [pos[midpoint - spacing], pos[midpoint], pos[midpoint + spacing]].all? x }.include? true
   end
 end
 
@@ -228,7 +229,6 @@ end
 
 def test2
   game = Game.new
-  binding.pry
   game.play
 end
 

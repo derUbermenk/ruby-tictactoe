@@ -1,90 +1,14 @@
-# Game object, use this to play a game and get a winner
-class Game
-  attr_reader :p1, :p2, :winner
-  attr_accessor :board, :number_of_turns
+# given mps, return the arrays containing the sides
 
-  def initialize
-    @board = Board.new
-    @p1 = Player.new
-    @p2 = Player.new
-    @number_of_turns = 5
-  end
+require 'pry-byebug'
 
-  def play_game
-    until stop_condition do
-      # keep playing
-      case self.number_of_turns 
-      when 5..3
-        player_half_turn_no_win_check p1
-        player_half_turn_no_win_chec p2
-        self.number_of_turns -= 1
-      when 2..1
-        player_half_turn_with_win_check p1
-        player_half_turn_with_win_check p2
-        self.number_of_turns -= 1
-      when 0
-        player_half_turn_with_win_check p1 
-      end
-    end
-  end
-
-  private
-
-  # game halts if this is true
-  def stop_condition
-    has_winner = !self.winner.eql?('none')
-    no_more_turns = self.number_of_turns.zero?
-
-    has_winner || no_more_turns
-  end
-
-  # a function containing steps done when 
-  # ... one player's turn to move is needed
-  # ... no check for win is done 
-  def player_half_turn_no_win_check(player)
-    player.put_piece
-    self.board.show
-  end
-
-  # a function containing steps done when 
-  # ... one player's turn to move is needed
-  # ... check for win is done 
-  def player_half_turn_with_win_check(player)
-    player.put_piece
-    self.board.show
-    check_win player
-  end
-
-  # Checks player has achieved a win
-  # 
-  # @param player [Player] a Player instance
-  # @return [String, NilClass] the name of the player who has won, any. Else returns nil
-  def check_win player
-    player_piece = player.piece
-    board_lines = [board.rows, board.columns, board.diagonals]
-
-    # where board_line can either be the rows, columns and diagonals array
-    has_win = board_lines.map{|board_line| 
-              check_board_line_for_win(board_line, player_piece)}.include? true
-
-    return unless has_win
-      @winner = player.name
-      self.winner
-  end
-
-  # Checks a group of lines -- rows, cols, diagonal contain a 
-  # ... at least one line with the same characters. 
-  # ... Note that a group of lines is represented as 
-  # ... [row1,row2, row3], and each row is also an array 
-  #
-  # @param board_lines [Array] an array containing lines of the same orientation,
-  # ... either rows, columns, diagonals
-  # @param char [String, Symbol, Integer] something that can take a position in a line
-  # 
-  # @return [TrueClass,FalseClass] returns true only when at least one line is has only one 
-  # ... character in all its positions
-  def check_board_line_for_win lines, char
-    lines.map{|line| line.all?(char)}.include?(true)
-  end
+def return_req(mps, spacing)
+  mps.map{|mp| [mp-spacing, mp, mp+spacing]}
 end
 
+
+mps = [2, 4, 6]
+binding.pry
+mps_req = return_req(mps, 2)
+
+c = 2
