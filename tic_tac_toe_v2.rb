@@ -15,12 +15,14 @@ class Game
 
   def play
     self.board.show
-    until stop_conditions_met? do
-      [self.p1, self.p2].each { |player|
-        puts "\n #{player.name} move \n enter z to quit \n enter piece position to put piece \n"
-        game_flow(player)
-        self.winner = player.winner?
-      }
+
+    until stop_conditions_met
+      print_player_prompt(self.p1)
+      game_flow(self.p1)
+      break if stop_conditions_met
+
+      print_player_prompt(self.p2)
+      game_flow(self.p2)
     end
   end
 
@@ -54,7 +56,7 @@ class Game
   # Checks if conditions for halting the game has been met
   #
   # @return [TrueClass, FalseClass]
-  def stop_conditions_met?
+  def stop_conditions_met
     if has_winner
       puts "\n #{self.winner} is winner "
     elsif board_full 
@@ -72,6 +74,13 @@ class Game
 
   def board_full 
     self.board.full
+  end
+
+  # Prints a prompt for the player
+  #
+  # @param player[Player]
+  def print_player_prompt(player)
+    puts "\n #{player.name} move \n enter z to quit \n enter piece position to put piece \n"
   end
 end
 
