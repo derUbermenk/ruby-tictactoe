@@ -211,25 +211,6 @@ class Board
 end
 
 # main
-# game = Game.new
-# game.play
-
-def test 
-
-  board = Board.new
-
-  pos = board.positions
-
-  pos.keys.each { |key| pos[key] = 'a'}
-
-  board_full = board.board_full
-
-  binding.pry
-end
-
-def test2
-  game = Game.new
-  game.play
-end
-
-test2
+game = Game.new
+puts " \n New game started \n "
+game.play
